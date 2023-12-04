@@ -1,4 +1,4 @@
-#syntax=sozercan/snapgen:test
+#syntax=snapgen:test
 apiVersion: v1alpha1
 debug: true
 models:
