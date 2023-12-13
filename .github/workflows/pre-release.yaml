@@ -51,6 +51,8 @@ jobs:
           tags: ghcr.io/sozercan/snapgen:dev
           cache-from: type=gha,scope=snapgen
           cache-to: type=gha,scope=snapgen,mode=max
+          sbom: true
+          provenance: true
 
       - name: Sign the images with GitHub OIDC Token
         env:
