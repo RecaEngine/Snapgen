@@ -58,7 +58,7 @@ jobs:
       - name: build test model
         run: |
           docker buildx build . -t testmodel:test \
-            -f test/snapgenfile.yaml \
+            -f test/snapgenfile-llama.yaml \
             --load --progress plain \
             --cache-from=type=gha,scope=testmodel \
             --cache-to=type=gha,scope=testmodel,mode=max
