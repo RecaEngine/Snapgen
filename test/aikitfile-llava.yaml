@@ -1,4 +1,4 @@
-#syntax=ghcr.io/sozercan/snapgen:latest
+#syntax=snapgen:test
 apiVersion: v1alpha1
 debug: true
 models:
