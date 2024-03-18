@@ -89,6 +89,10 @@ const config = {
         disableSwitch: false,
         respectPrefersColorScheme: true,
       },
+      announcementBar: {
+        id: 'announcementBar-1', // Increment on change
+        content: `⭐️ If you like Snapgen, please give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/sozercan/snapgen">GitHub</a>!</a>`,
+      },
     }),
 };
 
