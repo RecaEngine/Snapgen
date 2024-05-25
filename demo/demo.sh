@@ -62,7 +62,6 @@ cat > snapgen-inference.yaml << EOF
 #syntax=ghcr.io/sozercan/snapgen:latest
 debug: true
 apiVersion: v1alpha1
-runtime: cuda
 models:
   - name: mistral-finetuned
     source: snapgen-model-q4_k_m.gguf
