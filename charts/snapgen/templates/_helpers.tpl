@@ -1,0 +1,85 @@
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "snapgen.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define "snapgen.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "snapgen.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "snapgen.labels" -}}
+helm.sh/chart: {{ include "snapgen.chart" . }}
+{{ include "snapgen.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "snapgen.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "snapgen.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "snapgen.selectorLabelsUI" -}}
+app.kubernetes.io/name: {{ (printf "%s-webui" (include "snapgen.name" .)) }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "snapgen.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "snapgen.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the model list
+*/}}
+{{- define "snapgen.modelList" -}}
+{{- $modelList := default list}}
+{{- if .Values.ui.models}}
+{{- $modelList = concat $modelList .Values.ui.models }}
+{{- end}}
+{{- if .Values.ui.defaultModel}}
+{{- $modelList = append $modelList .Values.ui.defaultModel }}
+{{- end}}
+{{- $modelList = $modelList | uniq}}
+{{- default (join ",+" $modelList) -}}
+{{- end -}}
