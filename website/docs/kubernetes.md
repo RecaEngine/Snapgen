@@ -19,7 +19,8 @@ Please make sure you have Helm installed and configured. If you don't have Helm 
 Install the chart using the following command:
 
 ```bash
-helm install snapgen ./charts/snapgen
+helm repo add snapgen https://sozercan.github.io/snapgen/charts
+helm install snapgen/snapgen --name-template=snapgen
 ```
 
 Output will be similar to:
