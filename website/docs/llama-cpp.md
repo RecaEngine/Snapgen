@@ -8,7 +8,7 @@ This is the default backend for `snapgen`. No additional configuration is requir
 
 This backend:
 - provides support for GGUF (recommended) and GGML models
-- supports both CPU (AVX, AVX2 or AVX512) and CUDA runtimes
+- supports both CPU (`avx2`, `avx` or `fallback`) and CUDA runtimes
 
 ## Example
 
