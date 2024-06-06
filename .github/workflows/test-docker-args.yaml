@@ -87,7 +87,7 @@ jobs:
             --load --provenance=false --progress plain \
             --cache-from=type=gha,scope=testmodel \
             --cache-to=type=gha,scope=testmodel,mode=max \
-            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${SOURCE_BRANCH}/models/snapgenfile.yaml"
+            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${SOURCE_BRANCH}/test/snapgenfile-args.yaml"
 
       - name: list images
         run: docker images
