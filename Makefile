@@ -19,7 +19,8 @@ lint:
 
 .PHONY: build-snapgen
 build-snapgen:
-	docker buildx build . -t ${REGISTRY}/snapgen:${TAG} --output=${OUTPUT_TYPE} --build-arg LDFLAGS=${LDFLAGS}
+	docker buildx build . -t ${REGISTRY}/snapgen:${TAG} --output=${OUTPUT_TYPE} --build-arg LDFLAGS=${LDFLAGS} \
+		--progress=plain
 
 .PHONY: build-test-model
 build-test-model:
