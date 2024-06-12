@@ -20,11 +20,13 @@ Install the chart using the following command:
 
 ```bash
 helm repo add snapgen https://sozercan.github.io/snapgen/charts
-helm install snapgen/snapgen --name-template=snapgen
+helm install snapgen/snapgen --name-template=snapgen --namespace=snapgen --create-namespace
 ```
 
 :::tip
 By default, the chart will deploy the `llama-3-8b-instruct` model. You can customize the deployment by providing a [pre-built image](premade-models.md) or your own model image or other options. You can find the available options in the [values](#values) section.
+
+Chart will enforce [`restricted`](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted) [pod security admission](https://kubernetes.io/docs/concepts/security/pod-security-admission/) for enhanced security and hardening best practices on the namespace level.
 :::
 
 Output will be similar to:
@@ -32,7 +34,7 @@ Output will be similar to:
 ```bash
 NAME: snapgen
 LAST DEPLOYED: Sat Jun  8 07:53:13 2024
-NAMESPACE: default
+NAMESPACE: snapgen
 STATUS: deployed
 REVISION: 1
 TEST SUITE: None
@@ -41,7 +43,7 @@ Access Snapgen WebUI or API by running the following commands:
 
 - Port forward the service to your local machine:
 
-  kubectl --namespace default port-forward service/snapgen 8080:8080 &
+  kubectl --namespace snapgen port-forward service/snapgen 8080:8080 &
 
 - Visit http://127.0.0.1:8080/chat to access the WebUI
 
@@ -56,7 +58,7 @@ As mentioned in the notes, you can then port-forward and send requests to your m
 
 ```bash
 # port-forward for testing locally
-kubectl port-forward service/snapgen 8080:8080 &
+kubectl port-forward -n snapgen service/snapgen 8080:8080 &
 
  # send requests to your model
 curl http://localhost:8080/v1/chat/completions -H "Content-Type: application/json" -d '{
