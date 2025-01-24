@@ -1,142 +1,233 @@
-# Snapgen ✨
+# Snapgen
 
-<p align="center">
-<img src="./website/static/img/logo.png" width="200"><br>
-</p>
+SnapGen is a compact, modular AI inference engine designed for rapid model prototyping and deployment. Whether you're building an AI-native application, testing multimodal LLMs, or integrating models into tools, SnapGen delivers a clean, extensible runtime for managing inference with precision and control.
 
-Snapgen is a comprehensive platform to quickly get started to host, deploy, build and fine-tune large language models (LLMs).
+---
 
-Snapgen offers two main capabilities:
+## 📌 1. Introduction
 
-- **Inference**: Snapgen uses [LocalAI](https://localai.io/), which supports a wide range of inference capabilities and formats. LocalAI provides a drop-in replacement REST API that is OpenAI API compatible, so you can use any OpenAI API compatible client, such as [Kubectl AI](https://github.com/sozercan/kubectl-ai), [Chatbot-UI](https://github.com/sozercan/chatbot-ui) and many more, to send requests to open LLMs!
+SnapGen streamlines the process of launching and experimenting with modern large language models, vision-language models, and other generative systems. With built-in support for multiple inference providers, caching layers, and prompt orchestration, SnapGen provides a unified interface that adapts to your compute, project, or stack.
 
-- **[Fine-Tuning](https://sozercan.github.io/snapgen/docs/fine-tune)**: Snapgen offers an extensible fine-tuning interface. It supports [Unsloth](https://github.com/unslothai/unsloth) for fast, memory efficient, and easy fine-tuning experience.
+> Think of it as your personal AI switchboard — plug in a model, ask questions, and route the answers where they matter.
 
-👉 For full documentation, please see [Snapgen website](https://sozercan.github.io/snapgen/)!
+### Highlights
 
-## Features
+- Plug-and-play backends: OpenAI, Hugging Face, Ollama, Replicate, vLLM, and more  
+- Built-in prompt formats and chaining support  
+- Optional Redis memory & prompt caching  
+- Local or remote deployment  
+- CLI-first with Python integration
 
-- 🐳 No GPU, Internet access or additional tools needed except for [Docker](https://docs.docker.com/desktop/install/linux-install/)!
-- 🤏 Minimal image size, resulting in less vulnerabilities and smaller attack surface with a custom [distroless](https://github.com/GoogleContainerTools/distroless)-based image
-- 🎵 [Fine-tune support](https://sozercan.github.io/snapgen/docs/fine-tune)
-- 🚀 Easy to use declarative configuration for [inference](https://sozercan.github.io/snapgen/docs/specs-inference) and [fine-tuning](https://sozercan.github.io/snapgen/docs/specs-finetune)
-- ✨ OpenAI API compatible to use with any OpenAI API compatible client
-- 📸 [Multi-modal model support](https://sozercan.github.io/snapgen/docs/vision)
-- 🖼️ [Image generation support](https://sozercan.github.io/snapgen/docs/diffusion)
-- 🦙 Support for GGUF ([`llama`](https://github.com/ggerganov/llama.cpp)), GPTQ or EXL2 ([`exllama2`](https://github.com/turboderp/exllamav2)), and GGML ([`llama-ggml`](https://github.com/ggerganov/llama.cpp)) and [Mamba](https://github.com/state-spaces/mamba) models
-- 🚢 [Kubernetes deployment ready](https://sozercan.github.io/snapgen/docs/kubernetes)
-- 📦 Supports multiple models with a single image
-- 🖥️ Supports [AMD64 and ARM64](https://sozercan.github.io/snapgen/docs/create-images#multi-platform-support) CPUs and [GPU-accelerated inferencing with NVIDIA GPUs](https://sozercan.github.io/snapgen/docs/gpu)
-- 🔐 Ensure [supply chain security](https://sozercan.github.io/snapgen/docs/security) with SBOMs, Provenance attestations, and signed images
-- 🌈 Supports air-gapped environments with self-hosted, local, or any remote container registries to store model images for inference on the edge.
+Whether you're building internal tools or public products, SnapGen scales from localhost experiments to production workflows.
 
-## Quick Start
+### Supported Models (Out of the Box)
 
-You can get started with Snapgen quickly on your local machine without a GPU!
+- GPT-4 / GPT-3.5 via OpenAI API  
+- Mistral / Mixtral / LLaMA via Ollama  
+- Vision-capable models via Replicate or local inference  
+- Custom-hosted LLMs via vLLM
 
-```bash
-docker run -d --rm -p 8080:8080 ghcr.io/sozercan/llama3.1:8b
+## ⚙️ 2. Installation & Setup
+
+SnapGen is built to be lightweight, developer-friendly, and quick to configure. You can run it locally or integrate it into existing AI stacks with minimal setup.
+
+### 🔧 Prerequisites
+
+- Python 3.10 or newer  
+- `make` (for quick commands)  
+- Optional: Docker, Redis, Ollama, or local GPU runtime
+
+### 🚀 Installing SnapGen
+
+Clone the repository and install dependencies:
+
+```
+git clone https://github.com/your-org/snapgen.git  
+cd snapgen  
+make install  
 ```
 
-After running this, navigate to [http://localhost:8080/chat](http://localhost:8080/chat) to access the WebUI!
+If you're using a Python environment manager:
 
-### API
-
-Snapgen provides an OpenAI API compatible endpoint, so you can use any OpenAI API compatible client to send requests to open LLMs!
-
-```bash
-curl http://localhost:8080/v1/chat/completions -H "Content-Type: application/json" -d '{
-    "model": "llama-3.1-8b-instruct",
-    "messages": [{"role": "user", "content": "explain kubernetes in a sentence"}]
-  }'
+```
+python -m venv .venv  
+source .venv/bin/activate  
+pip install -r requirements.txt  
 ```
 
-Output should be similar to:
+### 🔑 Environment Variables
 
-```jsonc
-{
-  // ...
-    "model": "llama-3.1-8b-instruct",
-    "choices": [
-        {
-            "index": 0,
-            "finish_reason": "stop",
-            "message": {
-                "role": "assistant",
-                "content": "Kubernetes is an open-source container orchestration system that automates the deployment, scaling, and management of applications and services, allowing developers to focus on writing code rather than managing infrastructure."
-            }
-        }
-    ],
-  // ...
-}
+Create a `.env` file in the root directory to configure access keys and providers:
+
+# .env
+
+OPENAI_API_KEY=your-key-here  
+REPLICATE_API_TOKEN=your-replicate-token  
+OLLAMA_HOST=<http://localhost:11434>  
+REDIS_URL=redis://localhost:6379/0  
+
 ```
 
-That's it! 🎉 API is OpenAI compatible so this is a drop-in replacement for any OpenAI API compatible client.
+Environment settings let you mix and match multiple backends and inference routes from the same interface.
 
-## Pre-made Models
+### 🧪 Quick Test
 
-Snapgen comes with pre-made models that you can use out-of-the-box!
+Once installed and configured, you can run a test query:
 
-If it doesn't include a specific model, you can always [create your own images](https://sozercan.github.io/snapgen/docs/create-images), and host in a container registry of your choice!
+```
 
-## CPU
+make run MODEL=openai:gpt-3.5-turbo PROMPT="Explain gravity to a 5-year-old."  
 
-> [!NOTE]
-> Snapgen supports both AMD64 and ARM64 CPUs. You can run the same command on either architecture, and Docker will automatically pull the correct image for your CPU.
->
-> Depending on your CPU capabilities, Snapgen will automatically select the most optimized instruction set.
+```
 
-| Model           | Optimization | Parameters | Command                                                          | Model Name               | License                                                                            |
-| --------------- | ------------ | ---------- | ---------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------- |
-| 🦙 Llama 3.2     | Instruct     | 1B         | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/llama3.2:1b`   | `llama-3.2-1b-instruct`  | [Llama](https://ai.meta.com/llama/license/)                                        |
-| 🦙 Llama 3.2     | Instruct     | 3B         | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/llama3.2:3b`   | `llama-3.2-3b-instruct`  | [Llama](https://ai.meta.com/llama/license/)                                        |
-| 🦙 Llama 3.1     | Instruct     | 8B         | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/llama3.1:8b`   | `llama-3.1-8b-instruct`  | [Llama](https://ai.meta.com/llama/license/)                                        |
-| 🦙 Llama 3.3     | Instruct     | 70B        | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/llama3.3:70b`  | `llama-3.3-70b-instruct` | [Llama](https://ai.meta.com/llama/license/)                                        |  |
-| Ⓜ️ Mixtral       | Instruct     | 8x7B       | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/mixtral:8x7b`  | `mixtral-8x7b-instruct`  | [Apache](https://choosealicense.com/licenses/apache-2.0/)                          |
-| 🅿️ Phi 3.5       | Instruct     | 3.8B       | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/phi3.5:3.8b`   | `phi-3.5-3.8b-instruct`  | [MIT](https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/LICENSE) |
-| 🔡 Gemma 2       | Instruct     | 2B         | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/gemma2:2b`     | `gemma-2-2b-instruct`    | [Gemma](https://ai.google.dev/gemma/terms)                                         |
-| ⌨️ Codestral 0.1 | Code         | 22B        | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/codestral:22b` | `codestral-22b`          | [MNLP](https://mistral.ai/licenses/MNPL-0.1.md)                                    |
-| QwQ             |              | 32B        | `docker run -d --rm -p 8080:8080 ghcr.io/sozercan/qwq:32b`       | `qwq-32b-preview`        | [Apache 2.0](https://huggingface.co/Qwen/QwQ-32B-Preview/blob/main/LICENSE)        |
+Or use the CLI directly:
 
+```
 
-### NVIDIA CUDA
+python snapgen/main.py --model ollama:mistral --prompt "Write a haiku about quantum physics."  
 
-> [!NOTE]
-> To enable GPU acceleration, please see [GPU Acceleration](https://sozercan.github.io/snapgen/docs/gpu).
->
-> Please note that only difference between CPU and GPU section is the `--gpus all` flag in the command to enable GPU acceleration.
+```
 
-| Model           | Optimization  | Parameters | Command                                                                     | Model Name               | License                                                                                                                     |
-| --------------- | ------------- | ---------- | --------------------------------------------------------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| 🦙 Llama 3.2     | Instruct      | 1B         | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/llama3.2:1b`   | `llama-3.2-1b-instruct`  | [Llama](https://ai.meta.com/llama/license/)                                                                                 |
-| 🦙 Llama 3.2     | Instruct      | 3B         | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/llama3.2:3b`   | `llama-3.2-3b-instruct`  | [Llama](https://ai.meta.com/llama/license/)                                                                                 |
-| 🦙 Llama 3.1     | Instruct      | 8B         | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/llama3.1:8b`   | `llama-3.1-8b-instruct`  | [Llama](https://ai.meta.com/llama/license/)                                                                                 |
-| 🦙 Llama 3.3     | Instruct     | 70B        | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/llama3.3:70b`  | `llama-3.3-70b-instruct` | [Llama](https://ai.meta.com/llama/license/)                                        |  |
-| Ⓜ️ Mixtral       | Instruct      | 8x7B       | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/mixtral:8x7b`  | `mixtral-8x7b-instruct`  | [Apache](https://choosealicense.com/licenses/apache-2.0/)                                                                   |
-| 🅿️ Phi 3.5       | Instruct      | 3.8B       | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/phi3.5:3.8b`   | `phi-3.5-3.8b-instruct`  | [MIT](https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/LICENSE)                                          |
-| 🔡 Gemma 2       | Instruct      | 2B         | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/gemma2:2b`     | `gemma-2-2b-instruct`    | [Gemma](https://ai.google.dev/gemma/terms)                                                                                  |
-| ⌨️ Codestral 0.1 | Code          | 22B        | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/codestral:22b` | `codestral-22b`          | [MNLP](https://mistral.ai/licenses/MNPL-0.1.md)                                                                             |
-| QwQ             |               | 32B        | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/qwq:32b`       | `qwq-32b-preview`        | [Apache 2.0](https://huggingface.co/Qwen/QwQ-32B-Preview/blob/main/LICENSE)                                                 |
-| 📸 Flux 1 Dev    | Text to image | 12B        | `docker run -d --rm --gpus all -p 8080:8080 ghcr.io/sozercan/flux1:dev`     | `flux-1-dev`             | [FLUX.1 [dev] Non-Commercial License](https://github.com/black-forest-labs/flux/blob/main/model_licenses/LICENSE-FLUX1-dev) |
+---
 
+## 🧠 3. Architecture & Core Concepts
 
-### Apple Silicon (experimental)
+SnapGen is built around the idea of flexible model orchestration — instead of being tied to one provider or runtime, you define how prompts are routed, formatted, and processed.
 
-> [!NOTE]
-> To enable GPU acceleration on Apple Silicon, please see [Podman Desktop documentation](https://podman-desktop.io/docs/podman/gpu). For more information, please see [GPU Acceleration](https://sozercan.github.io/snapgen/docs/gpu).
->
-> Apple Silicon is an _experimental_ runtime and it may change in the future. This runtime is specific to Apple Silicon only, and it will not work as expected on other architectures, including Intel Macs.
->
-> Only `gguf` models are supported on Apple Silicon.
+### 🏗️ System Overview
 
-| Model       | Optimization | Parameters | Command                                                                                       | Model Name              | License                                                                            |
-| ----------- | ------------ | ---------- | --------------------------------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------- |
-| 🦙 Llama 3.2 | Instruct     | 1B         | `podman run -d --rm --device /dev/dri -p 8080:8080 ghcr.io/sozercan/applesilicon/llama3.2:1b` | `llama-3.2-1b-instruct` | [Llama](https://ai.meta.com/llama/license/)                                        |
-| 🦙 Llama 3.2 | Instruct     | 3B         | `podman run -d --rm --device /dev/dri -p 8080:8080 ghcr.io/sozercan/applesilicon/llama3.2:3b` | `llama-3.2-3b-instruct` | [Llama](https://ai.meta.com/llama/license/)                                        |
-| 🦙 Llama 3.1 | Instruct     | 8B         | `podman run -d --rm --device /dev/dri -p 8080:8080 ghcr.io/sozercan/applesilicon/llama3.1:8b` | `llama-3.1-8b-instruct` | [Llama](https://ai.meta.com/llama/license/)                                        |
-| 🅿️ Phi 3.5   | Instruct     | 3.8B       | `podman run -d --rm --device /dev/dri -p 8080:8080 ghcr.io/sozercan/applesilicon/phi3.5:3.8b` | `phi-3.5-3.8b-instruct` | [MIT](https://huggingface.co/microsoft/Phi-3.5-mini-instruct/resolve/main/LICENSE) |
-| 🔡 Gemma 2   | Instruct     | 2B         | `podman run -d --rm --device /dev/dri -p 8080:8080 ghcr.io/sozercan/applesilicon/gemma2:2b`   | `gemma-2-2b-instruct`   | [Gemma](https://ai.google.dev/gemma/terms)                                         |
+--[[
+  SnapGen System Diagram (ASCII)
+  ------------------------------
 
-## What's next?
+            +--------------------------+
+            |     SnapGen CLI / API    |
+            +-------------+------------+
+                          |
+                          v
+                  +---------------+
+                  |   Core Engine |
+                  +-------+-------+
+                          |
+            +-------------+-------------+
+            |             |             |
+            v             v             v
+     +-----------+   +-----------+   +--------------+
+     | Templates |   | Router    |   | Memory Cache |
+     +-----------+   +-----------+   +--------------+
+                          |
+                          v
+                 +------------------+
+                 | Inference Backend|
+                 | (OpenAI, Ollama) |
+                 +------------------+
 
-👉 For more information and how to fine tune models or create your own images, please see [Snapgen website](https://sozercan.github.io/snapgen/)!
+  Summary:
+  - CLI/API is the entry point
+  - Prompts pass through the Core Engine
+  - Engine uses Templates and Router logic to format & route queries
+  - Memory stores past interactions or context
+  - Inference backend executes the final model call
+
+--]]
+
+### 🔁 Prompt Routing
+
+Each call to SnapGen goes through the `router` — this dynamically determines which model to use based on the prompt, tags, or default settings.
+
+```python
+from snapgen.router import route_prompt
+
+response = route_prompt(
+    prompt="Write a poem about neural networks.",
+    model="replicate:meta/llama-2-7b-chat",
+    temperature=0.7,
+    max_tokens=150
+)
+print(response.text)
+```
+
+### 🧩 Custom Chains
+
+You can define sequences of prompts (chains) where the output of one step becomes input to the next.
+
+```python
+from snapgen.chains import Chain
+
+chain = Chain([
+    {"model": "openai:gpt-4", "prompt": "Summarize this article:\n{input}"},
+    {"model": "openai:gpt-3.5-turbo", "prompt": "Convert the summary into a tweet thread."}
+])
+
+output = chain.run(input="Paste your long article here...")
+print(output)
+```
+
+### 💡 Template-Aware Inference
+
+Templates support slot-filling using Python-style `{variables}` for dynamic prompt construction. Combine this with metadata or user input to dynamically generate the final query.
+
+---
+
+## 🚀 4. Deployment & Integration
+
+SnapGen is designed to be production-ready with minimal effort. Whether you want to host it as a microservice, plug it into your agent stack, or run it offline — SnapGen adapts to your workflow.
+
+### 📦 Docker Deployment
+
+Use the provided Dockerfile to containerize your setup.
+
+```
+docker build -t snapgen .  
+docker run --env-file .env -p 8000:8000 snapgen  
+```
+
+SnapGen will expose an HTTP endpoint (via FastAPI) on port `8000`.
+
+Access it with:
+
+```
+curl -X POST http://localhost:8000/query \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Tell me a joke about entropy.", "model": "ollama:mistral"}'
+```
+
+### 🧠 Integration with AI Agents
+
+SnapGen can act as the language layer for agents, workflows, and apps. Example with LangChain:
+
+```python
+from langchain.llms import OpenAI
+from snapgen.bridge import LangChainWrapper
+
+llm = LangChainWrapper(model="openai:gpt-3.5-turbo")
+agent = initialize_agent(tools=[], llm=llm, agent_type="zero-shot-react-description")
+```
+
+You can also mount SnapGen into FastAPI or Flask apps as a callable engine.
+
+### 🧩 Extending SnapGen
+
+SnapGen is modular — you can add:
+
+- Your own models via the `providers/` directory
+- Custom memory layers (e.g., Pinecone, Milvus)
+- New tools for post-processing (translation, summarization, etc.)
+- Middleware for logging, rate-limiting, or monitoring
+
+---
+
+## 🧰 5. Resources, Credits & Roadmap
+
+- Fine-tuned model support (LoRA, QLoRA)  
+- Native multimodal input/output (images + text)  
+- Web UI with playground and history  
+- API key management for shared deployments  
+- Analytics + cost tracking
+
+### 🙌 Credits
+
+Built and maintained by the SnapGen team — crafted for devs, agents, and AI explorers.  
+Inspired by projects in the open-source LLM ecosystem.
+
+> SnapGen is your command center for model orchestration — plug it in, turn it on, and watch your AI stack come alive
