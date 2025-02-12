@@ -51,7 +51,7 @@ jobs:
             storage.googleapis.com:443
             deb.debian.org:80
             developer.download.nvidia.com:443
-            pci-ids.ucw.cz:443
+            get.helm.sh:443
 
       - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
@@ -124,4 +124,4 @@ jobs:
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: kind-logs
-          path: ${KIND_LOGS_PATH}
+          path: $KIND_LOGS_PATH
