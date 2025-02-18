@@ -19,3 +19,7 @@ Please make sure to change syntax to `#syntax=ghcr.io/sozercan/snapgen:latest` i
 :::
 
 https://github.com/sozercan/snapgen/blob/main/test/snapgenfile-stablediffusion.yaml
+
+## Demo
+
+https://www.youtube.com/watch?v=gh7b-rt70Ug

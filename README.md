@@ -4,7 +4,7 @@
 <img src="./website/static/img/logo.png" width="200"><br>
 </p>
 
-Snapgen is a one-stop shop to quickly get started to host, deploy, build and fine-tune large language models (LLMs).
+Snapgen is a comprehensive platform to quickly get started to host, deploy, build and fine-tune large language models (LLMs).
 
 Snapgen offers two main capabilities:
 
