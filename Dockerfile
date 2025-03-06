@@ -1,4 +1,4 @@
-FROM golang:1.24-bookworm@sha256:00eccd446e023d3cd9566c25a6e6a02b90db3e1e0bbe26a48fc29cd96e800901 AS builder
+FROM golang:1.24-bookworm@sha256:ee7ff13d239350cc9b962c1bf371a60f3c32ee00eaaf0d0f0489713a87e51a67 AS builder
 ARG LDFLAGS
 COPY . /go/src/github.com/sozercan/snapgen
 WORKDIR /go/src/github.com/sozercan/snapgen
