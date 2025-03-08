@@ -20,6 +20,7 @@ Snapgen uses [LocalAI](https://localai.io/) under-the-hood to run inference. Loc
 - 🚢 Kubernetes deployment ready
 - 📦 Supports multiple models with a single image
 - 🖥️ Supports GPU-accelerated inferencing with NVIDIA GPUs
+- 🔐 Signed images for `snapgen` and pre-made models
 
 ## Demos
 
