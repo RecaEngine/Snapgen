@@ -1,4 +1,4 @@
-#syntax=snapgen:test
+#syntax=ghcr.io/sozercan/snapgen:latest
 apiVersion: v1alpha1
 debug: true
 runtime: cuda
