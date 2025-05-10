@@ -65,8 +65,6 @@ const config = {
         logo: {
           alt: 'Snapgen Logo',
           src: 'img/logo.svg',
-          width: 64,
-          height: 64,
         },
         items: [
           {
