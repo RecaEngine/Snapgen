@@ -100,8 +100,7 @@ jobs:
           helm install charts/snapgen --wait --debug --name-template snapgen \
             --set image.repository=testmodel \
             --set image.tag=test \
-            --set image.pullPolicy=Never \
-            --set ui.enabled=false
+            --set image.pullPolicy=Never
           kubectl port-forward service/snapgen 8080:8080 &
 
       - name: run test
