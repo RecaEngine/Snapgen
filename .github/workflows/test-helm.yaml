@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 240
     steps:
-      - uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+      - uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be 
         with:
           tool-cache: true
           android: true
@@ -36,7 +36,7 @@ jobs:
           swap-storage: true
 
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e 
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -65,10 +65,9 @@ jobs:
             dl-cdn.alpinelinux.org:443
             ghcr.io:443
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      # need containerd image store for testing local images
-      - uses: crazy-max/ghaction-setup-docker@370a7dad4b8ce8dbf00f9363e1652e5074dd6abe # v4.1.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 
+      
+      - uses: crazy-max/ghaction-setup-docker@370a7dad4b8ce8dbf00f9363e1652e5074dd6abe 
         with:
           daemon-config: |
             {
@@ -77,7 +76,7 @@ jobs:
                 "containerd-snapshotter": true
               }
             }
-      - uses: crazy-max/ghaction-github-runtime@b3a9207c0e1ef41f4cf215303c976869d0c2c1c4 # v3.0.0
+      - uses: crazy-max/ghaction-github-runtime@b3a9207c0e1ef41f4cf215303c976869d0c2c1c4 
 
       - name: build snapgen
         run: |
@@ -118,16 +117,6 @@ jobs:
       - name: run test (temporarily disabled)
         run: |
           echo "🟡 Test temporarily disabled. TODO: Re-enable once the endpoint is working properly."
-          # result=$(curl --fail --retry 10 --retry-all-errors http://127.0.0.1:8080/v1/chat/completions -H "Content-Type: application/json" -d '{
-          #   "model": "llama-3.2-1b-instruct",
-          #   "messages": [{"role": "user", "content": "explain kubernetes in a sentence"}]
-          # }')
-          # echo $result
-          #
-          # choices=$(echo "$result" | jq '.choices')
-          # if [ -z "$choices" ]; then
-          #   exit 1
-          # fi
 
       - name: save logs
         if: always()
@@ -136,7 +125,7 @@ jobs:
 
       - name: publish logs
         if: always()
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 
         with:
           name: kind-logs
           path: $KIND_LOGS_PATH

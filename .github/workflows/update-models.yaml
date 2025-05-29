@@ -32,12 +32,12 @@ jobs:
         model: ${{ fromJSON(github.event.inputs.models) }}
         runtime: ${{ fromJSON(github.event.inputs.runtime) }}
         exclude:
-        - model: flux-1-dev # requires cuda runtime
+        - model: flux-1-dev 
           runtime: applesilicon
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
-      - uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+      - uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be 
         with:
           tool-cache: true
           android: true
