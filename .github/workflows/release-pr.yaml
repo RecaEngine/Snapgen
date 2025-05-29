@@ -2,7 +2,7 @@ name: release-pr
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.0' # run this workflow when a new minor version is published
+      - 'v[0-9]+.[0-9]+.0' 
   workflow_dispatch:
     inputs:
       release_version:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e 
         with:
           egress-policy: audit
 
@@ -32,7 +32,7 @@ jobs:
           echo "MINOR_VERSION=${MINOR_VERSION}" >> ${GITHUB_ENV}
 
           echo "NEWVERSION=v${MAJOR_VERSION}.${MINOR_VERSION}.0" >> ${GITHUB_ENV}
-          # push is always being merged to the main branch
+          
           echo "TARGET_BRANCH=main" >> ${GITHUB_ENV}
           echo "TAG=${TAG}" >> ${GITHUB_ENV}
 
@@ -47,10 +47,8 @@ jobs:
           MAJOR_VERSION="$(echo "${NEWVERSION}" | cut -d '.' -f1 | tr -d 'v')"
           MINOR_VERSION="$(echo "${NEWVERSION}" | cut -d '.' -f2)"
 
-          # non-beta releases should always be merged to release branches
           echo "TARGET_BRANCH=release-${MAJOR_VERSION}.${MINOR_VERSION}" >> ${GITHUB_ENV}
 
-          # beta releases should always be merged to main
           if [[ "${NEWVERSION}" =~ "beta" ]]; then
             echo "TARGET_BRANCH=main" >> ${GITHUB_ENV}
           fi
@@ -63,14 +61,13 @@ jobs:
         run: |
           git checkout "${TARGET_BRANCH}" && exit 0
 
-          # Create and push release branch if it doesn't exist
           git checkout -b "${TARGET_BRANCH}"
           git push --set-upstream origin "${TARGET_BRANCH}"
 
       - run: make release-manifest
 
       - name: Create release pull request
-        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f
         with:
           commit-message: "chore: Prepare ${{ env.NEWVERSION }} release"
           title: "chore: Prepare ${{ env.NEWVERSION }} release"

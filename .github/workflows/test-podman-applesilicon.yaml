@@ -14,10 +14,8 @@ jobs:
         run: |
           rm -rf ./* || true
           rm -rf ./.??* || true
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-        # use default docker driver builder with containerd image store for local snapgen image
-        # these must be setup before running this test
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 
+      
       - run: docker buildx use desktop-linux
 
       - name: build snapgen
@@ -63,15 +61,9 @@ jobs:
       - run: podman stop testmodel
         if: always()
 
-      # - name: prune
-      #   run: |
-      #     docker system prune -a -f --volumes || true
-      #     podman system prune -a -f --volumes || true
-      #   if: always()
-
       - name: publish test artifacts
         if: always()
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 
         with:
           name: test-podman-gpu
           path: |
