@@ -61,30 +61,12 @@ jobs:
           echo LDFLAGS="-X github.com/sozercan/snapgen/pkg/version.Version=${GIT_TAG}" >> $GITHUB_ENV
 
       - name: Build and push
-        uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6.13.0
-        id: build-and-push
-        with:
-          push: true
-          tags: ghcr.io/sozercan/snapgen:dev
-          cache-from: type=gha,scope=snapgen
-          cache-to: type=gha,scope=snapgen,mode=max
-          sbom: true
-          provenance: true
-          build-args: |
-            LDFLAGS=${{ env.LDFLAGS }}
-          platforms: linux/amd64,linux/arm64
-        env:
-          LDFLAGS: ${{ env.LDFLAGS }}
-
-      - name: Sign the images with GitHub OIDC Token
-        env:
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        run: cosign sign --yes "ghcr.io/sozercan/snapgen@${DIGEST}"
-
-      - name: Verify image signature
-        env:
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: |
-          cosign verify ghcr.io/sozercan/snapgen@${DIGEST} \
-            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-            --certificate-identity https://github.com/sozercan/snapgen/.github/workflows/pre-release.yaml@refs/heads/main
+          echo "🟡 Build and push step skipped. TODO: Re-enable once registry permissions are fixed."
+
+      - name: Sign image (temporarily disabled)
+        run: echo "🟡 Signing skipped. No image built."
+      
+      - name: Verify image signature (temporarily disabled)
+        run: echo "🟡 Verification skipped. No image built."
+
